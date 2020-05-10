@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spending_analytics/ui/AuthPage/AuthScreen.dart';
+import 'package:spending_analytics/ui/MainPage/MainPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,7 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
       initialRoute: '/auth',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/auth': (context) => AuthPage(),
+        '/auth': (context) => LoginPage(),
+        '/main': (context) => MainPage(),
+
         // When navigating to the "/second" route, build the SecondScreen widget.
 
       },
