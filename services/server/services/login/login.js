@@ -10,7 +10,8 @@ function login(data, errorEvent, success) {
     if (error) {
         errorEvent(error);
     }
-    console.log(results);
+    
+    
     bcrypt.compare(password, results.rows[0].password, function(err, result) {
         if(result) {
             let jwtoken = jwtToken.getToken(email, results.rows[0].password);

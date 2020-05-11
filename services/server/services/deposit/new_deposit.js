@@ -9,14 +9,20 @@ function deposit(data, error, success) {
             [decoded.email, decoded.password], (fail, results) => {
                 if(results.rowCount > 0) {
                     config.dbPool.query('CALL new_deposit($1, $2, $3, $4, $5, $6, $7, $8);', 
-                    [user_id, deposit_name, amount, interest_rate, source_account_id, interest_payments, date_time, end_date], (fail, results) => {
-                        if(results) {
-                            success();
-                        }
+                    [user_id, deposit_name, amount, interest_rate, source_account_id, interest_payments, date_time, end_date], 
+                    (fail, results) => {
                         if (fail) {
                             error(fail.detail);
                             return;
                         }
+
+                        config.dbPool.query('select get_last_operation_id($1);', 
+                            [user_id], (fails, results) => {
+                                if(fails) {
+                                    error(fails.detail);
+                                }
+                                success(results.rows[0].get_last_operation_id);
+                        });
                     });
                 } else {
                     error();

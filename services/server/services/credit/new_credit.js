@@ -9,14 +9,21 @@ function credit(data, error, success) {
             [decoded.email, decoded.password], (fail, results) => {
                 if(results.rowCount > 0) {
                     config.dbPool.query('CALL new_credit($1, $2, $3, $4, $5, $6, $7, $8);', 
-                    [user_id, date_time, end_date, amount, interest_rate, credit_name, target_account_id, credit_payments], (fail, results) => {
-                        if(results) {
-                            success();
-                        }
+                    [user_id, date_time, end_date, amount, interest_rate, credit_name, target_account_id, credit_payments], 
+                    (fail, results) => {
                         if (fail) {
                             error(fail.detail);
                             return;
                         }
+
+                        config.dbPool.query('select get_last_operation_id($1);', 
+                            [user_id], (fails, results) => {
+                                if(fails) {
+                                    error(fails.detail);
+                                }
+                                success(results.rows[0].get_last_operation_id);
+                        });
+
                     });
                 } else {
                     error();

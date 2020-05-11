@@ -12,10 +12,11 @@ router.post('/', (request, response) => {
             msg: message
         });
     }
-
-    function success() {
+    
+    function success(operation_id) {
         response.status(200).send({
-            status: "success"
+            status: "success",
+            "operation_id" : operation_id
         });
     }
 

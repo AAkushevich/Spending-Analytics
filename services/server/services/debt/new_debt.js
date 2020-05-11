@@ -10,13 +10,20 @@ function debt(data, error, success) {
                 if(results.rowCount > 0) {
                     config.dbPool.query('CALL new_debt($1, $2, $3, $4, $5, $6, $7);', 
                     [user_id, date_time, amount, debt_mode, person, user_comment, account_id], (fail, results) => {
-                        if(results) {
-                            success();
-                        }
+
                         if (fail) {
                             error(fail.detail);
                             return;
                         }
+
+                        config.dbPool.query('select get_last_operation_id($1);', 
+                            [user_id], (fails, results) => {
+                                if(fails) {
+                                    error(fails.detail);
+                                }
+                                success(results.rows[0].get_last_operation_id);
+                        });
+                        
                     });
                 } else {
                     error();
