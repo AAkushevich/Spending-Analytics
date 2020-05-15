@@ -18,6 +18,9 @@ const express = require('express'),
     deleteTransferController = require('../../../controllers/apis/transfer/delete_transfer_controller'),
     deleteDepositController = require('../../../controllers/apis/deposit/delete_deposit_controller'),
     deleteCreditController = require('../../../controllers/apis/credit/delete_credit_controller');
+    
+    fetchDataController = require('../../../controllers/apis/fetch_data/fetch_all_data');
+    fetchAccountsController = require('../../../controllers/apis/fetch_data/get_accounts');
 
     let router = express.Router();
 
@@ -40,5 +43,6 @@ const express = require('express'),
     router.use('/delete_deposit', deleteDepositController);
     router.use('/delete_credit', deleteCreditController);
 
-
+    router.use('/fetch_all_data', fetchDataController);
+    router.use('/get_accounts', fetchAccountsController);
 module.exports = router;

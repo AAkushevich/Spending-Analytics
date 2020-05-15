@@ -304,18 +304,30 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION get_expenses(usr_id integer) 
-	RETURNS TABLE (operation_id INT, u_id INT, operation_type operation_type, date_time timestamp, 
-				   outer_row_id INT, amount real, account_id INT, category_id INT) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, date_time timestamp, 
+				   amount real, account_id INT, category_id INT, category_name varchar, category_icon varchar) 
 	AS $$
 	BEGIN
-		RETURN QUERY SELECT *
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, operations_queue.date_time, 
+			expense.amount, expense.account_id, expense.category_id, categories.category_name, categories.category_icon
 			FROM operations_queue 
 			INNER JOIN expense 
 			ON operations_queue.operation_id = expense.outer_row_id 
-			WHERE user_id = usr_id;
+			INNER JOIN categories 
+			ON expense.category_id = categories.id 
+			WHERE operations_queue.user_id = usr_id;
 	END; 
 	$$ LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION get_last_operation_id(usr_id integer) 
+	RETURNS integer 
+AS $$
+BEGIN
+	RETURN (SELECT max(operation_id)
+	FROM operations_queue 
+	WHERE user_id = usr_id);
+END; 
+$$ LANGUAGE 'plpgsql';
 CREATE OR REPLACE PROCEDURE delete_credit(oper_id integer) 								   
 LANGUAGE SQL
 AS $$
@@ -325,5 +337,94 @@ AS $$
 	delete from credit where outer_row_id = oper_id;
 	delete from operations_queue where operation_id = oper_id;
 $$;
+
+		CREATE OR REPLACE FUNCTION get_income(usr_id integer) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, date_time timestamp, 
+				   amount real, account_id INT, category_id INT, category_name varchar, category_icon varchar) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, operations_queue.date_time, 
+			income.amount, income.account_id, income.category_id, categories.category_name, categories.category_icon
+			FROM operations_queue 
+			INNER JOIN income 
+			ON operations_queue.operation_id = income.outer_row_id 
+			INNER JOIN categories 
+			ON income.category_id = categories.id 
+			WHERE operations_queue.user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
+	
+	Select * from get_income(12);
+	Select * from get_expenses(12);
+	
+
+	CREATE OR REPLACE FUNCTION get_credits(usr_id integer) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, credit_name varchar, amount real,
+				    date_time timestamp, end_date timestamp, interest_rate real, target_account INT,
+				  	credit_payments credit_payments_type, closed boolean) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, credit.credit_name, 
+		credit.amount, operations_queue.date_time, credit.end_date, credit.interest_rate, credit.target_account, 
+		credit.credit_payments, credit.closed
+			FROM operations_queue 
+			INNER JOIN credit 
+			ON operations_queue.operation_id = credit.outer_row_id 
+			WHERE operations_queue.user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
+
+		CREATE OR REPLACE FUNCTION get_debts(usr_id integer) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, date_time timestamp, amount real,
+				    source_account INT, person varchar, user_comment varchar, debt_mode debt_type, closed boolean) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, operations_queue.date_time, 
+							debt.amount, debt.source_account, debt.person, debt.user_comment, debt.debt_mode, debt.closed
+			FROM operations_queue 
+			INNER JOIN debt 
+			ON operations_queue.operation_id = debt.outer_row_id 
+			WHERE operations_queue.user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
+
+	CREATE OR REPLACE FUNCTION get_transfer(usr_id integer) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, date_time timestamp, amount real,
+				    source_account INT, target_account INT) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, operations_queue.date_time, 
+							transfer.amount, transfer.source_account, transfer.target_account
+			FROM operations_queue 
+			INNER JOIN transfer 
+			ON operations_queue.operation_id = transfer.outer_row_id 
+			WHERE operations_queue.user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
+
+		CREATE OR REPLACE FUNCTION get_deposit(usr_id integer) 
+	RETURNS TABLE (operation_id INT, operation_type operation_type, deposit_name varchar, amount real,
+				    currency varchar, date_time timestamp, end_date timestamp, interest_rate real, 
+				    interest_payments interest_payments_type, source_account INT) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT operations_queue.operation_id, operations_queue.operation_type, deposit.deposit_name, deposit.amount, 
+		deposit.currency, operations_queue.date_time, deposit.end_date, deposit.interest_rate, deposit.interest_payments, deposit.source_account
+			FROM operations_queue 
+			INNER JOIN deposit
+			ON operations_queue.operation_id = deposit.outer_row_id 
+			WHERE operations_queue.user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
+
+	CREATE OR REPLACE FUNCTION get_accounts(usr_id integer) 
+	RETURNS TABLE (account_id INT, account_name varchar, balance real, currency varchar) 
+	AS $$
+	BEGIN
+		RETURN QUERY SELECT accounts.id, accounts.account_name, accounts.balance, accounts.currency
+			FROM accounts 
+			WHERE user_id = usr_id;
+	END; 
+	$$ LANGUAGE 'plpgsql';
 
 	
