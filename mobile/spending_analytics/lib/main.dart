@@ -1,54 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:spending_analytics/data/repository/ApiReposytory.dart';
+import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
 import 'package:spending_analytics/ui/AuthPage/AuthScreen.dart';
 import 'package:spending_analytics/ui/MainPage/MainPage.dart';
+import 'package:spending_analytics/ui/PinPage/PinPage.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  bool alreadyLogin = false;
+  String token = await SharedPrefRepository().getUserToken();
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  if(token != null) {
+    alreadyLogin = true;
+    ApiRepository.setToken = token;
   }
+
+  runApp(SpendingAnalytics(alreadyLogin));
+
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class SpendingAnalytics extends StatelessWidget {
+  SpendingAnalytics(this.alreadyLogin);
 
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+  final bool alreadyLogin;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       theme: ThemeData(
+        backgroundColor: Colors.white
+      ),
 
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("AppBarTitle"),
-        ),
-      ),
-      initialRoute: '/auth',
+      initialRoute: alreadyLogin ? mainPageRoute : authPageRoute,
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/auth': (context) => LoginPage(),
-        '/main': (context) => MainPage(),
-
-        // When navigating to the "/second" route, build the SecondScreen widget.
-
+        authPageRoute: (context) => LoginPage(),
+        pinPageRoute: (context) => PinPage(),
+        mainPageRoute: (context) => MainPage(SharedPrefRepository()),
       },
     );
   }
 }
+
+const String authPageRoute = '/authRoute';
+const String mainPageRoute = '/mainRoute';
+const String pinPageRoute = '/pinRoute';

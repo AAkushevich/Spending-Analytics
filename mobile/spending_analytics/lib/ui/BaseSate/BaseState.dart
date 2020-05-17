@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spending_analytics/data/ActionResponse.dart';
-
+import 'package:toast/toast.dart';
 import 'BaseBloc.dart';
-
 
 abstract class BaseState<T extends StatefulWidget,
 BLOC_TYPE extends BaseBloC> extends State<T> {
@@ -14,6 +13,9 @@ BLOC_TYPE extends BaseBloC> extends State<T> {
   @override
   void initState() {
     _bloc = initBloC();
+    _bloc.toastMessageStream.listen((message) {
+      Toast.show(message, context, duration: Toast.LENGTH_LONG);
+    });
     preInitState();
     super.initState();
   }
@@ -27,9 +29,10 @@ BLOC_TYPE extends BaseBloC> extends State<T> {
     PreferredSizeWidget appBar = buildTopToolbarTitleWidget();
     Widget root;
     root = Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       appBar: appBar,
       body: SafeArea(child: buildStateContent()),
+      bottomNavigationBar: bottomBarWidget(),
     );
     return root;
   }
@@ -42,10 +45,10 @@ BLOC_TYPE extends BaseBloC> extends State<T> {
   }
 
   void disposeExtra();
-
   Widget buildStateContent();
 
   PreferredSizeWidget buildTopToolbarTitleWidget();
+  BottomNavigationBar bottomBarWidget();
 }
 
 class _StreamWidget<DATA_TYPE> {

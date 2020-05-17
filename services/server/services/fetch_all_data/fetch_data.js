@@ -4,12 +4,11 @@ var jwt = require('jsonwebtoken');
 async function fetchData(data, error, success) {
 
     jwt.verify(data.headers.token, config.tokenKey.key,async function(err, decoded) {
-        if(decoded) {
-            const {user_id} = data.query;
-            
+        if(decoded) {            
             config.dbPool.query('SELECT id FROM users WHERE email=$1 AND password=$2;', 
             [decoded.email, decoded.password], async (fail, results) => {
                 if(results.rowCount > 0) {
+                    let user_id = results.rows[0].id;
 
                     let incomeQuery = await config.dbPool.query('SELECT * FROM get_income($1);', [user_id]).catch((failMsg) => {
                         error(failMsg);

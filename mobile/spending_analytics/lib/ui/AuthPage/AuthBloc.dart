@@ -1,50 +1,73 @@
+import 'dart:convert';
+
 import 'package:rxdart/rxdart.dart';
+import 'package:spending_analytics/data/repository/ApiReposytory.dart';
 import 'package:spending_analytics/data/repository/IApiRepository.dart';
-import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
+import 'package:spending_analytics/data/repository/ISharedPrefRepository.dart';
 import 'package:http/http.dart';
 import 'package:spending_analytics/ui/BaseSate/BaseBloc.dart';
 
 class AuthBloc extends BaseBloC {
 
-  final SharedPrefRepository _sharedPrefRepository;
+  AuthBloc(this._apiRepository, this._sharedPrefRepository);
+
+  final ISharedPrefRepository _sharedPrefRepository;
   final IApiRepository _apiRepository;
 
-  BehaviorSubject<LOGIN_STATE> _isUserAlreadyAuth;
+  // ignore: close_sinks
+  BehaviorSubject<String> _loginEventSubject;
+  Observable<String> get loginEventStream => _loginEventSubject.stream;
 
-  AuthBloc(this._apiRepository, this._sharedPrefRepository) {
-    initEvent();
-  }
-
-  Observable<LOGIN_STATE> get isUserAlreadyAuthStream => _isUserAlreadyAuth.stream;
-
-  _changeLoginPageState(LOGIN_STATE value) {
-    _isUserAlreadyAuth.add(value);
-  }
-
-  void initEvent() {
-    _sharedPrefRepository.getUserToken().then((token) {
-      if(token != null) {
-        _changeLoginPageState(LOGIN_STATE.ALREADY_AUTH);
-      }
-    });
-  }
+  // ignore: close_sinks
+  BehaviorSubject<String> _signUpEventSubject;
+  Observable<String> get signUpEventStream => _signUpEventSubject.stream;
 
   @override
   void initSubjects(List<Subject> subjects) {
-    _isUserAlreadyAuth = BehaviorSubject();
-    subjects.add(_isUserAlreadyAuth);
+    _loginEventSubject = BehaviorSubject();
+    _signUpEventSubject = BehaviorSubject();
 
+    subjects.add(_loginEventSubject);
+    subjects.add(_signUpEventSubject);
   }
 
-  Future<void> login(String username, String password) async{
+  void _loginEvent({String message}) {
+    _loginEventSubject.sink.add(message);
+  }
+
+  void _loginEventError({String message}) {
+    _loginEventSubject.sink.addError(message);
+  }
+
+  void _signUpEvent({String message}) {
+    _signUpEventSubject.sink.add(message);
+  }
+
+  void _signUpEventError({String message}) {
+    _signUpEventSubject.sink.addError(message);
+  }
+
+  Future<void> login(String username, String password) async {
     Response response = await _apiRepository.login(username, password);
     if(response.statusCode == 200) {
-      print("asdas");
+      String token = json.decode(response.body)['token'];
+      ApiRepository.setToken = token;
+      _sharedPrefRepository.setUserToken(token);
+      _loginEvent();
+    } else {
+      String errorMessage = json.decode(response.body)['msg'];
+      _loginEventError(message: errorMessage);
     }
   }
-}
 
-enum LOGIN_STATE {
-  AUTH_REQUIRED,
-  ALREADY_AUTH
+  Future<void> signUp(String username, String password) async {
+    Response response = await _apiRepository.signUp(username, password);
+    if(response.statusCode == 200) {
+      _signUpEvent();
+    } else {
+      String errorMessage = json.decode(response.body)['msg'];
+      _signUpEventError(message: errorMessage);
+    }
+  }
+
 }

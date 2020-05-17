@@ -1,6 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:spending_analytics/data/Constants/ConstStrings.dart';
+import 'package:spending_analytics/data/repository/ApiReposytory.dart';
+import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
+import 'package:spending_analytics/ui/AuthPage/AuthBloc.dart';
+import 'package:spending_analytics/ui/BaseSate/BaseState.dart';
+import 'package:toast/toast.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+   return LoginPageState();
+  }
+}
+
+class LoginPageState extends BaseState<SignUpPage, AuthBloc> {
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordController2 = TextEditingController();
+
+
+  void validateAndSignUp() {
+    if(_emailController.text.isEmpty || _passwordController.text.isEmpty || _passwordController2.text.isEmpty) {
+      Toast.show("Все поля должны быть заполнены", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    if(!RegExp(Constants.emailRegEx).hasMatch(_emailController.text)) {
+      Toast.show("Невалидный email", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    if(_passwordController.text.compareTo(_passwordController2.text) != 0) {
+      Toast.show("Пароли не совпадаюют", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    if(_passwordController.text.length < 6) {
+      Toast.show("Длина пароля должна быть не менее 6 символов", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    bloc.signUp(_emailController.text, _passwordController.text);
+  }
+
+  @override
+  Widget buildStateContent() {
+    return _buildPageContent(context);
+  }
+
+  @override
+  PreferredSizeWidget buildTopToolbarTitleWidget() {
+    return null;
+  }
+
+  @override
+  void disposeExtra() {
+    // TODO: implement disposeExtra
+  }
+
+  @override
+  AuthBloc initBloC() {
+    return AuthBloc(ApiRepository(), SharedPrefRepository());
+  }
+
+  @override
+  void preInitState() {
+    bloc.signUpEventStream.listen((event) {
+      Navigator.pop(context);
+    },
+        onError: (error) {
+          Toast.show(error, context, duration: Toast.LENGTH_LONG);
+        });
+  }
 
   Widget _buildPageContent(BuildContext context) {
     return Container(
@@ -60,6 +129,7 @@ class SignUpPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       style: TextStyle(color: Colors.black),
+                      controller: _emailController,
                       decoration: InputDecoration(
                           hintText: "Email address",
                           hintStyle: TextStyle(color: Colors.black),
@@ -73,6 +143,7 @@ class SignUpPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       style: TextStyle(color: Colors.black),
+                      controller: _passwordController,
                       decoration: InputDecoration(
                           hintText: "Password",
                           hintStyle: TextStyle(color: Colors.black),
@@ -86,6 +157,7 @@ class SignUpPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       style: TextStyle(color: Colors.black),
+                      controller: _passwordController2,
                       decoration: InputDecoration(
                           hintText: "Confirm password",
                           hintStyle: TextStyle(color: Colors.black),
@@ -114,7 +186,9 @@ class SignUpPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  validateAndSignUp();
+                },
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
                 child: Text("Sign Up", style: TextStyle(color: Colors.white)),
                 color: Colors.green,
@@ -127,9 +201,8 @@ class SignUpPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildPageContent(context),
-    );
+  BottomNavigationBar bottomBarWidget() {
+    return null;
   }
 }
+

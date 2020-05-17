@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:spending_analytics/data/Constants/ConstStrings.dart';
 import 'package:spending_analytics/data/repository/ApiReposytory.dart';
 import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
+import 'package:spending_analytics/main.dart';
 import 'package:spending_analytics/ui/BaseSate/BaseState.dart';
-
+import 'package:toast/toast.dart';
 import 'AuthBloc.dart';
 import 'SignUpPage.dart';
 
 class LoginPage extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return LoginPageState();
   }
+
 }
 
 class LoginPageState extends BaseState<LoginPage, AuthBloc> {
@@ -44,8 +48,6 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
             ),
           )
         ],
-//        borderRadius: new BorderRadius.all(...),
-//        gradient: new LinearGradient(...),
       ),
       child: Stack(
         children: <Widget>[
@@ -150,7 +152,7 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40.0)),
                 child: Text("Login", style: TextStyle(color: Colors.white)),
-                color: Colors.deepPurple,
+                color: Colors.black,
               ),
             ),
           )
@@ -161,7 +163,6 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
 
   @override
   Widget build(BuildContext context) {
-// TODO: implement build
     return Scaffold(
       body: _buildPageContent(context),
     );
@@ -169,37 +170,27 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
 
   @override
   Widget buildStateContent() {
-    streamBuilderPrimitive<LOGIN_STATE>(
-        bloc.isUserAlreadyAuthStream, LOGIN_STATE.AUTH_REQUIRED, (value) {
-      switch (value) {
-        case LOGIN_STATE.AUTH_REQUIRED:
-          return _buildPageContent(context);
-          break;
-        case LOGIN_STATE.ALREADY_AUTH:
-//Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-          return Container();
-          break;
-        default:
-          return Container();
-          break;
-      }
-    });
+
   }
 
   @override
   PreferredSizeWidget buildTopToolbarTitleWidget() {
-// TODO: implement buildTopToolbarTitleWidget
     return null;
   }
 
   @override
   void disposeExtra() {
-// TODO: implement disposeExtra
+
   }
 
   @override
   void preInitState() {
-// TODO: implement preInitState
+    bloc.loginEventStream.listen((event) {
+      Navigator.pushNamed(context, mainPageRoute);
+    },
+    onError: (error) {
+      Toast.show(error, context, duration: Toast.LENGTH_LONG);
+    });
   }
 
   @override
@@ -208,6 +199,26 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
   }
 
   void _login() {
+
+    if(_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      Toast.show("Все поля должны быть заполнены", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    if(!RegExp(Constants.emailRegEx).hasMatch(_emailController.text)) {
+      Toast.show("Невалидный email", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+    if(_passwordController.text.length < 6) {
+      Toast.show("Длина пароля должна быть не менее 6 символов", context, duration: Toast.LENGTH_LONG);
+      return;
+    }
+
     bloc.login(_emailController.text, _passwordController.text);
+  }
+
+  @override
+  BottomNavigationBar bottomBarWidget() {
+    // TODO: implement bottomBarWidget
+    throw UnimplementedError();
   }
 }
