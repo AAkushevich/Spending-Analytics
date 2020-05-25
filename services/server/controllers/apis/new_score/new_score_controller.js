@@ -16,7 +16,7 @@ router.post('/', (request, response) => {
     function success(rowId) {
         response.status(200).send({
             status: "success",
-            row_id: rowId
+            account_id: rowId
         });
     }
 

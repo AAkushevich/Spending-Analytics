@@ -11,10 +11,13 @@ const express = require('express'),
     transferController = require('../../../controllers/apis/transfer/transfer_controller'),
     depositController = require('../../../controllers/apis/deposit/deposit_controller'),
     creditController = require('../../../controllers/apis/credit/credit_controller'),
+    closeCreditController = require('../../../controllers/apis/credit/close_credit_controller'),
 
     deleteExpenseController = require('../../../controllers/apis/expense/delete_expense_controller'),
     deleteIncomeController = require('../../../controllers/apis/income/delete_income_controller'),
     deleteDebtController = require('../../../controllers/apis/debt/delete_debt_controller'),
+    closeDebtController = require('../../../controllers/apis/debt/close_debt_controller'),
+
     deleteTransferController = require('../../../controllers/apis/transfer/delete_transfer_controller'),
     deleteDepositController = require('../../../controllers/apis/deposit/delete_deposit_controller'),
     deleteCreditController = require('../../../controllers/apis/credit/delete_credit_controller');
@@ -35,10 +38,13 @@ const express = require('express'),
     router.use('/transfer', transferController);
     router.use('/deposit', depositController);
     router.use('/credit', creditController);
+    router.use('/close_credit', closeCreditController);
 
     router.use('/delete_expense', deleteExpenseController);
     router.use('/delete_income', deleteIncomeController);
     router.use('/delete_debt', deleteDebtController);
+    router.use('/close_debt', closeDebtController);
+
     router.use('/delete_transfer', deleteTransferController);
     router.use('/delete_deposit', deleteDepositController);
     router.use('/delete_credit', deleteCreditController);

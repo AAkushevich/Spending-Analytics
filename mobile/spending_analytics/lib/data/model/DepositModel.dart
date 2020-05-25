@@ -19,7 +19,7 @@ class DepositModel {
     currency = json['currency'];
     dateTime = DateTime.parse(json['date_time']);
     endDate = DateTime.parse(json['end_date']);
-    interestRate = json['interest_rate'].toDouble();;
+    interestRate = json['interest_rate'].toDouble();
     interestPayments = json['interest_payments'];
     sourceAccountId = json['source_account'];
   }

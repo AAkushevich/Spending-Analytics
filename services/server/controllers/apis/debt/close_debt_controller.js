@@ -1,10 +1,10 @@
 const
     express = require('express'),
-    removeScoreService = require('../../../services/removeScore/remove_score');
+    debtService = require('../../../services/debt/close_debt');
 
 let router = express.Router();
 
-router.get('/', (request, response) => {
+router.post('/', (request, response) => {
 
     function error(message) {
         response.status(400).send({
@@ -19,7 +19,7 @@ router.get('/', (request, response) => {
         });
     }
 
-    removeScoreService.removeScore(request, error, success);
+    debtService.closeDebt(request, error, success);
 });
 
 module.exports = router;

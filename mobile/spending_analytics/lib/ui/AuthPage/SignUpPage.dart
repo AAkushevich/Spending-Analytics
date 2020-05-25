@@ -204,5 +204,10 @@ class LoginPageState extends BaseState<SignUpPage, AuthBloc> {
   BottomNavigationBar bottomBarWidget() {
     return null;
   }
+
+  @override
+  Widget buildFloatingActionButton() {
+    return null;
+  }
 }
 

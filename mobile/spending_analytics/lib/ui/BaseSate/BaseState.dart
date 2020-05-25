@@ -33,6 +33,7 @@ BLOC_TYPE extends BaseBloC> extends State<T> {
       appBar: appBar,
       body: SafeArea(child: buildStateContent()),
       bottomNavigationBar: bottomBarWidget(),
+      floatingActionButton: buildFloatingActionButton(),
     );
     return root;
   }
@@ -45,8 +46,9 @@ BLOC_TYPE extends BaseBloC> extends State<T> {
   }
 
   void disposeExtra();
-  Widget buildStateContent();
 
+  Widget buildStateContent();
+  Widget buildFloatingActionButton();
   PreferredSizeWidget buildTopToolbarTitleWidget();
   BottomNavigationBar bottomBarWidget();
 }

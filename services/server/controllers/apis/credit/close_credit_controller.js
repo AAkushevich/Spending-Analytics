@@ -1,10 +1,10 @@
 const
     express = require('express'),
-    removeScoreService = require('../../../services/removeScore/remove_score');
+    closeCreditService = require('../../../services/credit/close_credit');
 
 let router = express.Router();
 
-router.get('/', (request, response) => {
+router.post('/', (request, response) => {
 
     function error(message) {
         response.status(400).send({
@@ -15,11 +15,11 @@ router.get('/', (request, response) => {
 
     function success() {
         response.status(200).send({
-            status: "success",
+            status: "success"
         });
     }
 
-    removeScoreService.removeScore(request, error, success);
+    closeCreditService.deleteCredit(request, error, success);
 });
 
 module.exports = router;

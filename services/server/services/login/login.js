@@ -11,7 +11,7 @@ function login(data, errorEvent, success) {
         errorEvent(error);
     }
     
-    
+    if(results.rowCount > 0) {
     bcrypt.compare(password, results.rows[0].password, function(err, result) {
         if(result) {
             let jwtoken = jwtToken.getToken(email, results.rows[0].password);
@@ -20,7 +20,9 @@ function login(data, errorEvent, success) {
             errorEvent();
         }
     });
-
+    } else {
+        errorEvent();
+    }
 
   });
 }

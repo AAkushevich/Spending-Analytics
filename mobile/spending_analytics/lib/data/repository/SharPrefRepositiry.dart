@@ -124,7 +124,11 @@ class SharedPrefRepository implements ISharedPrefRepository{
   @override
   Future<Map<String, dynamic>> getCurrencyExchanges() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return json.decode(prefs.getString(KEY_CURRENCY_EXCHANGES));
+    if(prefs.getString(KEY_CURRENCY_EXCHANGES) == null){
+      return null;
+    } else {
+      return json.decode(prefs.getString(KEY_CURRENCY_EXCHANGES));
+    }
   }
 
   @override

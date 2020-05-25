@@ -1,5 +1,7 @@
 class AccountModel {
 
+  AccountModel(this.accountId, this.accountName, this.balance, this.currency);
+
   int accountId;
   String accountName;
   double balance;

@@ -169,6 +169,7 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
   }
 
   @override
+  // ignore: missing_return
   Widget buildStateContent() {
 
   }
@@ -186,7 +187,7 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
   @override
   void preInitState() {
     bloc.loginEventStream.listen((event) {
-      Navigator.pushNamed(context, mainPageRoute);
+      Navigator.pushReplacementNamed(context, mainPageRoute);
     },
     onError: (error) {
       Toast.show(error, context, duration: Toast.LENGTH_LONG);
@@ -220,5 +221,10 @@ class LoginPageState extends BaseState<LoginPage, AuthBloc> {
   BottomNavigationBar bottomBarWidget() {
     // TODO: implement bottomBarWidget
     throw UnimplementedError();
+  }
+
+  @override
+  Widget buildFloatingActionButton() {
+    return null;
   }
 }

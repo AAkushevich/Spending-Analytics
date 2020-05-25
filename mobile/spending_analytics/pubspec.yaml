@@ -20,11 +20,35 @@ dev_dependencies:
   toast: ^0.1.5
   http: ^0.12.0+4
   sprintf: ^4.0.2
+  grouped_list: ^3.0.1
+  flutter_speed_dial: ^1.2.5
+  slide_popup_dialog: ^0.0.2
+  charts_flutter: ^0.9.0
+  multi_charts: ^0.2.0
+
   flutter_test:
     sdk: flutter
 
 
-flutter:
 
+flutter:
   uses-material-design: true
 
+  assets:
+    - assets/accessories.png
+    - assets/alcohol.png
+    - assets/cafe.png
+    - assets/clothes.png
+    - assets/correct.png
+    - assets/education.png
+    - assets/gift.png
+    - assets/health.png
+    - assets/home.png
+    - assets/mobile.png
+    - assets/products.png
+    - assets/transport.png
+    - assets/debt.png
+    - assets/credit.png
+    - assets/deposit.png
+    - assets/transfer.png
+    - assets/salary.png

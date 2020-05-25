@@ -338,7 +338,7 @@ AS $$
 	delete from operations_queue where operation_id = oper_id;
 $$;
 
-		CREATE OR REPLACE FUNCTION get_income(usr_id integer) 
+	CREATE OR REPLACE FUNCTION get_income(usr_id integer) 
 	RETURNS TABLE (operation_id INT, operation_type operation_type, date_time timestamp, 
 				   amount real, account_id INT, category_id INT, category_name varchar, category_icon varchar) 
 	AS $$
@@ -428,3 +428,21 @@ $$;
 	$$ LANGUAGE 'plpgsql';
 
 	
+	CREATE OR REPLACE PROCEDURE delete_account(accountId integer) 									   
+	LANGUAGE SQL
+		AS $$
+
+	$$;
+
+	insert into categories(category_name, category_type, category_icon, user_id)
+	values('Продукты', 'expense','products.png', null), 
+			('Алкоголь', 'expense', 'alcohol.png', null), 
+			('Подарки', 'expense', 'gift.png', null),
+			('Кафе и рестораны', 'expense', 'cafe.png', null),
+			('Одежда', 'expense', 'clothes.png', null),
+			('Образование', 'expense', 'education.png', null),
+			('Здоровье', 'expense', 'health.png', null),
+			('Дом', 'expense', 'home.png', null),
+			('Транспорт', 'expense', 'transport.png', null),
+			('Оклад', 'income', 'salary.png', null),
+			('Аксессуары', 'expense', 'accessories.png', null);

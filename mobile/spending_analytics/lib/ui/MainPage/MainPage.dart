@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spending_analytics/data/repository/ApiReposytory.dart';
-import 'package:spending_analytics/data/repository/IApiRepository.dart';
 import 'package:spending_analytics/data/repository/ISharedPrefRepository.dart';
 import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
 import 'package:spending_analytics/ui/BaseSate/BaseState.dart';
@@ -76,7 +75,6 @@ class MainPageState extends BaseState<MainPage, MainPageBloc> {
           return Container();
         }
       },
-
     );
   }
 
@@ -113,11 +111,12 @@ class MainPageState extends BaseState<MainPage, MainPageBloc> {
         builder: (_) => FunkyOverlay(saveBaseCurrency),
       );
     }
+    await bloc.fetchAllData();
     components.add(AccountsScreen());
     components.add(OperationsScreen());
     components.add(AnalyticsScreen());
-    components.add(SettingsScreen());
-    bloc.fetchAllData();
+    components.add(SettingsScreen(SharedPrefRepository(), baseCurrency));
+
   }
 
   @override
@@ -129,25 +128,30 @@ class MainPageState extends BaseState<MainPage, MainPageBloc> {
       items: [
         BottomNavigationBarItem(
             icon: Icon(Icons.account_balance, color: Color.fromARGB(255, 0, 0, 0)),
-            title: new Text('Accounts', style: TextStyle(color: Colors.black))
+            title: new Text('Счета', style: TextStyle(color: Colors.black))
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.credit_card, color: Color.fromARGB(255, 0, 0, 0)),
-            title: new Text('Transactions', style: TextStyle(color: Colors.black))
+            title: new Text('Транзакции', style: TextStyle(color: Colors.black))
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.poll, color: Color.fromARGB(255, 0, 0, 0)),
-            title: new Text('Statistics', style: TextStyle(color: Colors.black))
+            title: new Text('Статистика', style: TextStyle(color: Colors.black))
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.settings, color: Color.fromARGB(255, 0, 0, 0)),
-            title: new Text('Settings', style: TextStyle(color: Colors.black))
+            title: new Text('Настройки', style: TextStyle(color: Colors.black))
         )
       ],
       onTap: (index) {
         _onItemTapped(index);
       },
     );
+  }
+
+  @override
+  FloatingActionButton buildFloatingActionButton() {
+    return null;
   }
 
 }

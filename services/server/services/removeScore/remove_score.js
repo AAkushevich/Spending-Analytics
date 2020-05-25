@@ -8,13 +8,11 @@ function removeScore(data, error, success) {
             config.dbPool.query('SELECT id FROM users WHERE email=$1 AND password=$2;', 
             [decoded.email, decoded.password], (fail, results) => {
                 if(results.rowCount > 0) {
-                    config.dbPool.query('DELETE FROM accounts WHERE id=$1;', 
-                    [id], (fail, results) => {
-                        if(results.rowCount > 0) {
-                            success();
-                        } else {
-                            error();
-                        }
+                    console.log(data.query.accountId);
+                    config.dbPool.query('CALL delete_account($1);', 
+                    [data.query.accountId], (fail, results) => {
+                        success();
+                        
                         if (fail) {
                             error(fail.detail);
                             return;

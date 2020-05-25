@@ -40,15 +40,18 @@ class MainPageBloc extends BaseBloC {
         });
         _sharedPrefRepository.setAccounts(accounts);
         _sharedPrefRepository.setOperations(operations);
-        mainPageState(MAIN_PAGE_STATE.SUCCESS);
-        await getExchangeRates();
+        int status = await getExchangeRates();
+        if(status == 0) {
+          mainPageState(MAIN_PAGE_STATE.SUCCESS);
+        } else {
+          mainPageState(MAIN_PAGE_STATE.ERROR);
+        }
       } else {
         mainPageState(MAIN_PAGE_STATE.ERROR);
       }
     } else {
       await getExchangeRates();
       mainPageState(MAIN_PAGE_STATE.SUCCESS);
-
     }
   }
 
@@ -65,22 +68,22 @@ class MainPageBloc extends BaseBloC {
     }
   }
 
-  Future<void> getExchangeRates() async {
+  Future<int> getExchangeRates() async {
     String baseCurrency = await _sharedPrefRepository.getBaseCurrency();
     var currencyCode = ["BYN", "RUB", "USD", "EUR"];
     currencyCode.removeWhere((element) => element == baseCurrency);
     Response response = await _apiRepository.getCurrencyExchangeRates(baseCurrency, currencyCode);
     if(response.statusCode == 200) {
       _sharedPrefRepository.setCurrencyExchanges(json.decode(response.body));
+      return 0;
     } else {
       var exchanges = await _sharedPrefRepository.getCurrencyExchanges();
       if(exchanges == null) {
-        mainPageState(MAIN_PAGE_STATE.ERROR);
+        return 1;
       }
-
+      return 0;
     }
   }
-
 
   Future<List<dynamic>> getAllOperations() async {
     Response response = await _apiRepository.fetchAllData();

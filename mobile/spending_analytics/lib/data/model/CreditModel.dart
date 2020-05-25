@@ -18,7 +18,7 @@ class CreditModel {
     amount = json['amount'].toDouble();
     dateTime = DateTime.parse(json['date_time']);
     endDate = DateTime.parse(json['end_date']);
-    interestRate = json['interest_rate'].toDouble();;
+    interestRate = json['interest_rate'].toDouble();
     targetAccountId = json['target_account'];
     creditPayments = json['credit_payments'];
     closed = json['closed'];
@@ -35,5 +35,5 @@ class CreditModel {
         'target_account': targetAccountId,
         'credit_payments': creditPayments,
         'closed': closed,
-      };
+  };
 }
