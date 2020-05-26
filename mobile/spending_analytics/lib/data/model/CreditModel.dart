@@ -1,5 +1,8 @@
 class CreditModel {
 
+  CreditModel(this.operationId, this.creditName, this.amount, this.operationType,
+      this.dateTime, this.endDate, this.interestRate, this.targetAccountId, this.creditPayments, this.closed);
+
   int operationId;
   String creditName;
   String operationType;
@@ -25,15 +28,15 @@ class CreditModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'operation_id': operationId,
-        'credit_name': creditName,
-        'operation_type': operationType,
-        'amount': amount,
-        'date_time': dateTime.toString(),
-        'end_date': endDate.toString(),
-        'interest_rate': interestRate,
-        'target_account': targetAccountId,
-        'credit_payments': creditPayments,
-        'closed': closed,
+    'operation_id': operationId,
+    'credit_name': creditName,
+    'operation_type': operationType,
+    'amount': amount,
+    'date_time': dateTime.toString(),
+    'end_date': endDate.toString(),
+    'interest_rate': interestRate,
+    'target_account': targetAccountId,
+    'credit_payments': creditPayments,
+    'closed': closed,
   };
 }

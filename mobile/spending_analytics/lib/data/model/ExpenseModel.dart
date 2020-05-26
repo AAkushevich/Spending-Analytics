@@ -1,5 +1,8 @@
 class ExpenseModel {
 
+  ExpenseModel(this.operationId, this.dateTime, this.amount, this.operationType,
+      this.accountId, this.categoryId, this.categoryName, this.categoryIcon);
+
   int operationId;
   DateTime dateTime;
   double amount;

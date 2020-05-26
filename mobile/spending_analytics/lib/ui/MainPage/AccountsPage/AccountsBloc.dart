@@ -83,9 +83,21 @@ class AccountsBloc extends BaseBloC {
       if(baseCurrency.compareTo(account.currency) == 0) {
         balance += account.balance;
       } else {
-        balance += account.balance * currencyRates[account.currency];
+        balance += account.balance / currencyRates[account.currency];
       }
     });
+
+    List<dynamic> operations = await _sharedPrefRepository.getOperations();
+    operations.forEach((operation) {
+      if(operation is DepositModel) {
+        if(baseCurrency.compareTo(operation.currency) == 0) {
+          balance += operation.amount;
+        } else {
+          balance += operation.amount / currencyRates[operation.currency];
+        }
+      }
+    });
+
 
     String balanceStr = balance.toString();
     if(int.parse(balanceStr.substring(balanceStr.indexOf('.') + 1, balanceStr.length)) == 0) {

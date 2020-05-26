@@ -24,7 +24,8 @@ const express = require('express'),
     
     fetchDataController = require('../../../controllers/apis/fetch_data/fetch_all_data');
     fetchAccountsController = require('../../../controllers/apis/fetch_data/get_accounts');
-
+    getCategoriesController = require('../../../controllers/apis/category/category_controller');
+    
     let router = express.Router();
 
     router.use('/login', authController);
@@ -51,4 +52,5 @@ const express = require('express'),
 
     router.use('/fetch_all_data', fetchDataController);
     router.use('/get_accounts', fetchAccountsController);
+    router.use('/get_categories', getCategoriesController);
 module.exports = router;

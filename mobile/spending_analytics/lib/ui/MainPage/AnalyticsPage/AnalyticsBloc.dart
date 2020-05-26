@@ -10,6 +10,7 @@ class AnalyticsBloc extends BaseBloC {
   AnalyticsBloc(this._apiRepository, this._sharedPrefRepository);
 
   final ISharedPrefRepository _sharedPrefRepository;
+
   final IApiRepository _apiRepository;
 
   // ignore: close_sinks

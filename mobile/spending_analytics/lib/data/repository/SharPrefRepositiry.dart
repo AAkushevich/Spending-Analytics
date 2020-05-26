@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spending_analytics/data/model/AccountModel.dart';
+import 'package:spending_analytics/data/model/CategoryModel.dart';
 import 'package:spending_analytics/data/model/CreditModel.dart';
 import 'package:spending_analytics/data/model/DebtModel.dart';
 import 'package:spending_analytics/data/model/DepositModel.dart';
@@ -143,10 +144,33 @@ class SharedPrefRepository implements ISharedPrefRepository{
     return prefs.remove(KEY_CURRENCY_EXCHANGES);
   }
 
+  @override
+  Future<List<CategoryModel>> getCategories() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<CategoryModel> categories = new List();
+    json.decode(prefs.getString(KEY_CATEGORIES)).forEach((item) {
+      categories.add(CategoryModel.fromJson(item));
+    });
+    return categories;
+  }
+
+  @override
+  Future<void> removeCategories() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(KEY_CATEGORIES);
+  }
+
+  @override
+  Future<void> setCategories(List<CategoryModel> categories) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(KEY_CATEGORIES, json.encode(categories));
+  }
+
+  static const KEY_USER_TOKEN = 'KEY_USER_TOKEN';
+  static const KEY_ACCOUNTS = 'KEY_ACCOUNTS';
+  static const KEY_CATEGORIES = 'KEY_CATEGORIES';
+  static const KEY_OPERATIONS = 'KEY_OPERATIONS';
+  static const KEY_BASE_CURRENCY = 'KEY_BASE_CURRENCY';
+  static const KEY_CURRENCY_EXCHANGES = 'KEY_CURRENCY_EXCHANGES';
 }
 
-const KEY_USER_TOKEN = 'KEY_USER_TOKEN';
-const KEY_ACCOUNTS = 'KEY_ACCOUNTS';
-const KEY_OPERATIONS = 'KEY_OPERATIONS';
-const KEY_BASE_CURRENCY = 'KEY_BASE_CURRENCY';
-const KEY_CURRENCY_EXCHANGES = 'KEY_CURRENCY_EXCHANGES';

@@ -1,5 +1,8 @@
 class DebtModel {
 
+  DebtModel(this.operationId, this.dateTime, this.amount, this.operationType,
+      this.sourceAccountId, this.person, this.userComment, this.debtMode, this.closed);
+
   int operationId;
   DateTime dateTime;
   double amount;

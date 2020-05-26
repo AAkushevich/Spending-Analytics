@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:spending_analytics/data/model/AccountModel.dart';
+import 'package:spending_analytics/data/model/CategoryModel.dart';
 import 'package:spending_analytics/data/model/CreditModel.dart';
 import 'package:spending_analytics/data/model/DebtModel.dart';
 import 'package:spending_analytics/data/model/DepositModel.dart';
@@ -8,25 +10,37 @@ import 'package:spending_analytics/data/model/ExpenseModel.dart';
 import 'package:spending_analytics/data/model/IncomeModel.dart';
 import 'package:spending_analytics/data/model/TransferModel.dart';
 import 'package:spending_analytics/data/repository/ApiReposytory.dart';
+import 'package:spending_analytics/data/repository/ISharedPrefRepository.dart';
 import 'package:spending_analytics/data/repository/SharPrefRepositiry.dart';
 import 'package:spending_analytics/ui/BaseSate/BaseState.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewCreditScreen.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewDebtScreen.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewDepositScreen.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewExpenseScreen.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewIncomeScreen.dart';
+import 'package:spending_analytics/ui/MainPage/OperationsPage/NewTransferScreen.dart';
 import 'package:spending_analytics/ui/MainPage/OperationsPage/OperationsBloc.dart';
 import 'package:spending_analytics/ui/Widgets/Preloader.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 class OperationsScreen extends StatefulWidget {
-  OperationsScreen();
 
+  OperationsScreen(this._sharedPrefRepository);
+
+  final ISharedPrefRepository _sharedPrefRepository;
 
   @override
   State<StatefulWidget> createState() {
-    return OperationsState();
+    return OperationsState(_sharedPrefRepository);
   }
 }
 
 class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
-  OperationsState();
+
+  final ISharedPrefRepository _sharedPrefRepository;
+
+  OperationsState(this._sharedPrefRepository);
 
   @override
   BottomNavigationBar bottomBarWidget() {
@@ -176,11 +190,13 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
 
   Widget getDebtCart(DebtModel element) {
     String acName;
+    String currency;
     String money = formatMoney(element.amount);
     bool lent = element.debtMode.compareTo("lent") == 0;
     bloc.accounts.forEach((account) {
       if (account.accountId.compareTo(element.sourceAccountId) == 0) {
         acName = account.accountName;
+        currency = account.currency;
       }
     });
     return ListTile(
@@ -208,7 +224,7 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
               ],
             ),
             Text(
-              lent ? "-$money" : "+$money",
+              lent ? "-$money $currency" : "+$money $currency",
               style: TextStyle(
                   color: lent ? Colors.red : Colors.green, fontSize: 18),
             )
@@ -219,9 +235,11 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
 
   Widget getCreditCart(CreditModel element) {
     String acName;
+    String currency;
     bloc.accounts.forEach((account) {
       if (account.accountId.compareTo(element.targetAccountId) == 0) {
         acName = account.accountName;
+        currency = account.currency;
       }
     });
     return ListTile(
@@ -249,7 +267,7 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
               ],
             ),
             Text(
-              "+${formatMoney(element.amount)}",
+              "+${formatMoney(element.amount)} $currency",
               style: TextStyle(color: Colors.green, fontSize: 18),
             )
           ],
@@ -259,9 +277,12 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
 
   Widget getDepositCart(DepositModel element) {
     String acName;
+    String currency;
+
     bloc.accounts.forEach((account) {
       if (account.accountId.compareTo(element.sourceAccountId) == 0) {
         acName = account.accountName;
+        currency = account.currency;
       }
     });
     return ListTile(
@@ -289,7 +310,7 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
               ],
             ),
             Text(
-              "-${formatMoney(element.amount)}",
+              "-${formatMoney(element.amount)} ${element.currency}",
               style: TextStyle(color: Colors.red, fontSize: 18),
             )
           ],
@@ -322,18 +343,22 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
   // ignore: missing_return
   Widget getAmountText(dynamic model) {
     if (model is ExpenseModel) {
+      String currency = bloc.accounts.where((element) => element.accountId.compareTo(model.accountId) == 0).first.currency;
+
       return Text(
-        "-${formatMoney(model.amount)}",
+        "-${formatMoney(model.amount)} $currency",
         style: TextStyle(color: Color.fromRGBO(200, 0, 0, 1), fontSize: 18),
       );
     } else if (model is IncomeModel) {
+      String currency = bloc.accounts.where((element) => element.accountId.compareTo(model.accountId) == 0).first.currency;
       return Text(
-        "+${formatMoney(model.amount)}",
+        "+${formatMoney(model.amount)} $currency",
         style: TextStyle(color: Colors.green, fontSize: 18),
       );
     } else if (model is TransferModel) {
+      String currency = bloc.accounts.where((element) => element.accountId.compareTo(model.sourceAccountId) == 0).first.currency;
       return Text(
-        "${formatMoney(model.amount)}",
+        "${formatMoney(model.amount)} $currency",
         style: TextStyle(color: Colors.black, fontSize: 18),
       );
     }
@@ -725,7 +750,9 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
   }
 
   @override
-  void preInitState() async {}
+  void preInitState() async {
+    await bloc.calculateCurrentBalance();
+  }
 
   @override
   Widget buildFloatingActionButton() {
@@ -738,27 +765,77 @@ class OperationsState extends BaseState<OperationsScreen, OperationsBloc> {
         SpeedDialChild(
           child: Icon(Icons.remove),
           label: "Расход",
-          onTap: () { },
+          onTap: () async{
+            List<CategoryModel> categories = await _sharedPrefRepository.getCategories();
+            categories.removeWhere((element) => element.categoryType.compareTo("income") == 0);
+            List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>
+                  NewExpenseScreen(SharedPrefRepository(), bloc.newExpense, categories, accounts)));
+          },
           backgroundColor: Colors.black
         ),
         SpeedDialChild(
             child: Icon(Icons.add),
             label: "Доход",
-            onTap: () { },
+            onTap: () async{
+              List<CategoryModel> categories = await _sharedPrefRepository.getCategories();
+              categories.removeWhere((element) => element.categoryType.compareTo("expense") == 0);
+              List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      NewIncomeScreen(SharedPrefRepository(), bloc.newIncome, categories, accounts)));
+            },
             backgroundColor: Colors.black
         ),
         SpeedDialChild(
-            child: IconButton(icon: new Image.asset('assets/transfer.png', color: Colors.white),
-            onPressed: () {  }),
+            child: IconButton(icon: new Image.asset('assets/transfer.png', color: Colors.white)),
             label: "Трансфер",
-            onTap: () { },
+            onTap: () async{
+              List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      NewTransferScreen(SharedPrefRepository(), bloc.newTransfer, accounts)));
+            },
             backgroundColor: Colors.black
         ),
         SpeedDialChild(
-            child: IconButton(icon: new Image.asset('assets/debt.png', color: Colors.white,),
-            onPressed: () {  }),
+            child: IconButton(icon: new Image.asset('assets/debt.png', color: Colors.white,)),
             label: "Долг",
-            onTap: () { },
+            onTap: () async{
+              List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      NewDebtScreen(SharedPrefRepository(), bloc.newDebt, accounts)));
+            },
+            backgroundColor: Colors.black
+        ),
+        SpeedDialChild(
+            child: IconButton(icon: new Image.asset('assets/credit.png', color: Colors.white,)),
+            label: "Кредит",
+            onTap: () async{
+              List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      NewCreditScreen(SharedPrefRepository(), bloc.newCredit, accounts)));
+            },
+            backgroundColor: Colors.black
+        ),
+        SpeedDialChild(
+            child: IconButton(icon: new Image.asset('assets/deposit.png', color: Colors.white,)),
+            label: "Вклад",
+            onTap: () async{
+              List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>
+                      NewDepositScreen(SharedPrefRepository(), bloc.newDeposit, accounts)));
+            },
             backgroundColor: Colors.black
         ),
       ],

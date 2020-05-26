@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:spending_analytics/data/model/AccountModel.dart';
+import 'package:spending_analytics/data/model/CategoryModel.dart';
 import 'package:spending_analytics/data/model/CreditModel.dart';
 import 'package:spending_analytics/data/model/DebtModel.dart';
 import 'package:spending_analytics/data/model/DepositModel.dart';
@@ -38,6 +39,7 @@ class MainPageBloc extends BaseBloC {
         operations.sort((a, b) {
           return a.operationId.compareTo(b.operationId);
         });
+        await getCategories();
         _sharedPrefRepository.setAccounts(accounts);
         _sharedPrefRepository.setOperations(operations);
         int status = await getExchangeRates();
@@ -115,7 +117,6 @@ class MainPageBloc extends BaseBloC {
         }
       }
 
-
       if(decodedResponse["deposits"] != null) {
         for(int i = 0; i < decodedResponse["deposits"].length; i++) {
           operations.add(DepositModel.fromJson(decodedResponse["deposits"][i]));
@@ -127,11 +128,20 @@ class MainPageBloc extends BaseBloC {
           operations.add(CreditModel.fromJson(decodedResponse["credits"][i]));
         }
       }
-
       return operations;
     } else {
       return null;
     }
+  }
+
+  Future<void> getCategories() async{
+    Response response = await _apiRepository.getCategories();
+    var decodedResponse = json.decode(response.body);
+    List<CategoryModel> categories = List();
+    decodedResponse['categories'].forEach((element) {
+      categories.add(CategoryModel.fromJson(element));
+    });
+    await _sharedPrefRepository.setCategories(categories);
   }
 
   @override

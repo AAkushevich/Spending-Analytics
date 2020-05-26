@@ -113,10 +113,9 @@ class MainPageState extends BaseState<MainPage, MainPageBloc> {
     }
     await bloc.fetchAllData();
     components.add(AccountsScreen());
-    components.add(OperationsScreen());
+    components.add(OperationsScreen(SharedPrefRepository()));
     components.add(AnalyticsScreen());
     components.add(SettingsScreen(SharedPrefRepository(), baseCurrency));
-
   }
 
   @override

@@ -1,5 +1,8 @@
 class DepositModel {
 
+  DepositModel(this.operationId, this.depositName, this.amount, this.operationType,
+      this.currency, this.dateTime, this.endDate, this.interestRate, this.sourceAccountId, this.interestPayments);
+
   int operationId;
   String depositName;
   double amount;

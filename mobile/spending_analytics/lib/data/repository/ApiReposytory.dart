@@ -60,6 +60,16 @@ class ApiRepository implements IApiRepository {
     return response;
   }
 
+  @override
+  Future<Response> getCategories() async {
+    var response = await get(
+      _getCategoriesApi,
+      headers: _headers,
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
   Future<Response> getCurrencyExchangeRates(String baseCurrency, List<String> currencyCode) async{
     var response = await get(
         "http://min-api.cryptocompare.com/data/price?fsym=$baseCurrency&tsyms=${currencyCode[0]},${currencyCode[1]},${currencyCode[2]}",
@@ -177,14 +187,92 @@ class ApiRepository implements IApiRepository {
     return response;
   }
 
+  @override
+  Future<Response> newExpense(DateTime dateTime, double amount, int accountId, int categoryId) async{
+    var response = await post(
+        _newExpenseApi,
+        headers: _headers,
+        body: "{ \"date_time\" : \"${dateTime.toString()}\", \"amount\" : $amount, \"account_id\" : $accountId, \"category_id\" : $categoryId  }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+  @override
+  Future<Response> newIncome(DateTime dateTime, double amount, int accountId, int categoryId) async{
+    var response = await post(
+        _newIncomeApi,
+        headers: _headers,
+        body: "{ \"date_time\" : \"${dateTime.toString()}\", \"amount\" : $amount, \"account_id\" : $accountId, \"category_id\" : $categoryId  }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+  @override
+  Future<Response> newTransfer(DateTime dateTime, double amount, int sourceAccountId, int targetAccountId) async{
+    var response = await post(
+        _newTransferApi,
+        headers: _headers,
+        body: "{ \"date_time\" : \"${dateTime.toString()}\", \"amount\" : $amount, \"source_account_id\" : $sourceAccountId, \"target_account_id\" : $targetAccountId }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+  @override
+  Future<Response> newDebt(DateTime dateTime, double amount, String debtMode, String person, String userComment, int accountId) async{
+    var response = await post(
+        _newDebtApi,
+        headers: _headers,
+        body: "{ \"date_time\" : \"${dateTime.toString()}\", \"amount\" : $amount, "
+              "\"debt_mode\" : \"$debtMode\", \"person\" : \"$person\", "
+              "\"user_comment\" : \"$userComment\", \"account_id\" : $accountId }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+  @override
+  Future<Response> newCredit(DateTime dateTime, DateTime endDate, double amount,
+      double interestRate, String creditName, int targetAccount, String creditPayments) async{
+    var response = await  post(
+        _newCreditApi,
+        headers: _headers,
+        body: "{ \"date_time\" : \"${dateTime.toString()}\", \"end_date\" : \"${endDate.toString()}\", \"amount\" : $amount, \"interest_rate\" : $interestRate, \"credit_name\" : \"$creditName\", \"target_account_id\" : $targetAccount, \"credit_payments\" : \"$creditPayments\" }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+  @override
+  Future<Response> newDeposit(String depositName, double amount, double interestRate, int sourceAccount,
+      String interestPayments, DateTime dateTime, DateTime endDate) async{
+    var response = await post(
+        _newDepositApi,
+        headers: _headers,
+        body: "{ \"deposit_name\" : \"$depositName\", \"amount\" : $amount, \"interest_rate\" : $interestRate, \"source_account_id\" : $sourceAccount, \"interest_payments\" : \"$interestPayments\", \"date_time\" : \"${dateTime.toString()}\", \"end_date\" : \"${endDate.toString()}\" }"
+    );
+    printResponseInFormat(response);
+    return response;
+  }
+
+
   static const String _serverUrl = "http://192.168.43.4:3000/api/v1";
   static const String _registerApi = _serverUrl + "/sign_up";
   static const String _loginApi = _serverUrl + "/login";
   static const String _fetchAllDataApi = _serverUrl + "/fetch_all_data";
   static const String _newAccountApi = _serverUrl + "/new_score";
+  static const String _newIncomeApi = _serverUrl + "/new_income";
+  static const String _newExpenseApi = _serverUrl + "/new_expense";
+  static const String _newTransferApi = _serverUrl + "/transfer";
+  static const String _newDebtApi = _serverUrl + "/new_debt";
+  static const String _newCreditApi = _serverUrl + "/credit";
+  static const String _newDepositApi = _serverUrl + "/deposit";
   static const String _removeAccountApi = _serverUrl + "/remove_score";
   static const String _getAccountsApi = _serverUrl + "/get_accounts";
   static const String _deleteIncomeApi = _serverUrl + "/delete_income";
+  static const String _getCategoriesApi = _serverUrl + "/get_categories";
   static const String _deleteExpenseApi = _serverUrl + "/delete_expense";
   static const String _deleteDepositApi = _serverUrl + "/delete_deposit";
   static const String _deleteCreditApi = _serverUrl + "/delete_credit";
@@ -192,6 +280,5 @@ class ApiRepository implements IApiRepository {
   static const String _closeDebtApi = _serverUrl + "/close_debt";
   static const String _closeCreditApi = _serverUrl + "/close_credit";
   static const String _deleteTransferApi = _serverUrl + "/delete_transfer";
-
 
 }

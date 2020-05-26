@@ -1,5 +1,8 @@
 class TransferModel {
 
+  TransferModel(this.operationId, this.dateTime, this.amount, this.operationType,
+      this.sourceAccountId, this.targetAccountId);
+
   int operationId;
   DateTime dateTime;
   double amount;

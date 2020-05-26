@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="16cd3e22-e65e-4ea8-9443-79f348aa8bf9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/model/CategoryModel.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/OperationsPage/NewExpenseScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/model/ExpenseModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/model/ExpenseModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/ApiReposytory.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/ApiReposytory.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/IApiRepository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/IApiRepository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/ISharedPrefRepository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/ISharedPrefRepository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/SharPrefRepositiry.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/data/repository/SharPrefRepositiry.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/AnalyticsPage/AnalyticsBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/AnalyticsPage/AnalyticsBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/MainPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/MainPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/MainPageBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/MainPageBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/OperationsPage/OperationsBloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/OperationsPage/OperationsBloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/OperationsPage/OperationsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/lib/ui/MainPage/OperationsPage/OperationsScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/spending_analytics/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/spending_analytics/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/server/routes/apis/v1/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/server/routes/apis/v1/index.js" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1cQ0Iq1mc2qWBklwjHNZ0zVh67j" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/mobile/spending_analytics" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="16cd3e22-e65e-4ea8-9443-79f348aa8bf9" name="Default Changelist" comment="" />
+      <created>1590445432843</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590445432843</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
