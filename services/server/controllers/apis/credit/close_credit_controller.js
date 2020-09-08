@@ -19,7 +19,7 @@ router.post('/', (request, response) => {
         });
     }
 
-    closeCreditService.deleteCredit(request, error, success);
+    closeCreditService.closeCredit(request, error, success);
 });
 
 module.exports = router;

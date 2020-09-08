@@ -126,8 +126,8 @@ class AccountsBloc extends BaseBloC {
   Future<void> deleteAccount(int accountId) async{
     Response response = await _apiRepository.removeAccount(accountId);
     if(response.statusCode == 200) {
-      int accountId = json.decode(response.body)['account_id'];
       List<AccountModel> accounts = await _sharedPrefRepository.getAccounts();
+      print("Adsadasd");
       accounts.removeWhere((element) => element.accountId.compareTo(accountId) == 0);
       _sharedPrefRepository.setAccounts(accounts);
       calculateCurrentBalance();
@@ -221,7 +221,7 @@ class AccountsBloc extends BaseBloC {
     if(response.statusCode == 200) {
       await _refreshOperationsList();
       List<dynamic> list = await _sharedPrefRepository.getOperations();
-      deposit = list.where((element) => element.operationType.compareTo("deposit") == 0);
+      deposit = list.where((element) => element.operationType.compareTo("deposit") == 0).toList();
       _depositSubject.sink.add(deposit);
     } else {
       showMessage("Ошибка. Вот так вот.");
@@ -234,7 +234,7 @@ class AccountsBloc extends BaseBloC {
     if(response.statusCode == 200) {
       await _refreshOperationsList();
       List<dynamic> list = await _sharedPrefRepository.getOperations();
-      debts = list.where((element) => element.operationType.compareTo("debt") == 0);
+      debts = list.where((element) => element.operationType.compareTo("debt") == 0).toList();
       _debtSubject.sink.add(debts);
     } else {
       showMessage("Ошибка. Вот так вот.");
@@ -248,7 +248,7 @@ class AccountsBloc extends BaseBloC {
       await _refreshOperationsList();
       await _refreshAccounts();
       List<dynamic> list = await _sharedPrefRepository.getOperations();
-      debts = list.where((element) => element.operationType.compareTo("debt") == 0);
+      debts = list.where((element) => element.operationType.compareTo("debt") == 0).toList();
       _debtSubject.sink.add(debts);
     } else {
       showMessage("Ошибка. Вот так вот.");
@@ -262,7 +262,7 @@ class AccountsBloc extends BaseBloC {
       await _refreshOperationsList();
       await _refreshAccounts();
       List<dynamic> list = await _sharedPrefRepository.getOperations();
-      credits = list.where((element) => element.operationType.compareTo("credit") == 0);
+      credits = list.where((element) => element.operationType.compareTo("credit") == 0).toList();
       _creditSubject.sink.add(credits);
     } else {
       showMessage("Ошибка. Вот так вот.");
